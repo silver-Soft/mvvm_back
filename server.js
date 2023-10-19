@@ -1,4 +1,6 @@
 const express = require('express');
+const https = require('https');  // Agrega el módulo HTTPS
+const fs = require('fs'); // Agrega el módulo File System
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 
@@ -102,6 +104,14 @@ app.delete('/reset-notes', (req, res) => {
     });
 });
 
-app.listen(port, () => {
+const httpsOptions = {
+  key: fs.readFileSync('server.key'), // Ruta a tu clave privada
+  cert: fs.readFileSync('server.cert') // Ruta a tu certificado
+};
+
+// Crea un servidor HTTPS en lugar de HTTP
+const httpsServer = https.createServer(httpsOptions, app);
+
+httpsServer.listen(port,'0.0.0.0', () => {
   console.log(`El servidor está escuchando en el puerto ${port}`);
 });
