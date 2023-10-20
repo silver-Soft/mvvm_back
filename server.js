@@ -29,6 +29,20 @@ app.post('/notes', (req, res) => {
   });
 });
 
+// Ruta para crear una nueva nota con id (POST)
+app.post('/notes/:customId', (req, res) => {
+  const customId = req.params.customId;
+  const { title, description, priority } = req.body;
+  // Ahora puedes usar 'customId' para guardar la nota con el ID personalizado.
+  db.run('INSERT INTO notes (id, title, description, priority) VALUES (?, ?, ?, ?)', [customId, title, description, priority], function (err) {
+    if (err) {
+      res.status(500).json({ error: 'Error al guardar la nota' });
+    } else {
+      res.status(201).json({ id: customId, title, description, priority });
+    }
+  });
+});
+
 // Ruta para obtener todas las notas (GET)
 app.get('/notes', (req, res) => {
   db.all('SELECT * FROM notes', function (err, rows) {
@@ -83,6 +97,17 @@ app.delete('/notes/:id', (req, res) => {
       }
     });
   });
+
+  // Ruta para eliminar todas las notas (DELETE)
+app.delete('/notes', (req, res) => {
+  db.run('DELETE FROM notes', function (err) {
+      if (err) {
+          res.status(500).json({ status: 500, message: 'Error al eliminar todas las notas' });
+      } else {
+          res.status(200).json({ status: 200, message: 'Todas las notas han sido eliminadas' });
+      }
+  });
+});
 
   // Ruta para reiniciar la primary key y eliminar todos los registros (DELETE)
 app.delete('/reset-notes', (req, res) => {
