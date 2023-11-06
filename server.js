@@ -43,6 +43,20 @@ app.post('/notes/:customId', (req, res) => {
   });
 });
 
+// Ruta para crear una nueva nota con id en body (POST)
+app.post('/saveNote', (req, res) => {
+  const { id, title, description, priority } = req.body;
+  console.log(JSON.stringify(req.body))
+  // Ahora puedes usar 'customId' para guardar la nota con el ID personalizado.
+  db.run('INSERT INTO notes (id, title, description, priority) VALUES (?, ?, ?, ?)', [id, title, description, priority], function (err) {
+    if (err) {
+      res.status(500).json({ error: 'Error al guardar la nota' });
+    } else {
+      res.status(201).json({ id: id, title, description, priority });
+    }
+  });
+});
+
 // Ruta para obtener todas las notas (GET)
 app.get('/notes', (req, res) => {
   db.all('SELECT * FROM notes', function (err, rows) {
