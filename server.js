@@ -17,18 +17,6 @@ db.serialize(function () {
   );
 });
 
-// Ruta para crear una nueva nota (POST)
-app.post('/notes', (req, res) => {
-  const { title, description, priority } = req.body;
-  db.run('INSERT INTO notes (title, description, priority) VALUES (?, ?, ?)', [title, description, priority], function (err) {
-    if (err) {
-      res.status(500).json({ error: 'Error al guardar la nota' });
-    } else {
-      res.status(201).json({ id: this.lastID, title, description, priority });
-    }
-  });
-});
-
 // Ruta para crear una nueva nota con id (POST)
 app.post('/notes/:customId', (req, res) => {
   const customId = req.params.customId;
