@@ -122,26 +122,7 @@ app.delete('/notes', (req, res) => {
       }
   });
 });
-
-  // Ruta para reiniciar la primary key y eliminar todos los registros (DELETE)
-app.delete('/reset-notes', (req, res) => {
-    db.serialize(() => {
-      db.run('DELETE FROM notes', (err) => {
-        if (err) {
-          res.status(500).json({ status: 500, message: 'Error al reiniciar las notas' });
-        } else {
-          // Reiniciar la primary key
-          db.run('DELETE FROM sqlite_sequence WHERE name = ?', 'notes', (err) => {
-            if (err) {
-              res.status(500).json({ status: 500, message: 'Error al reiniciar la primary key' });
-            } else {
-              res.status(200).json({ status: 200, message: 'Primary key reiniciada y notas eliminadas' });
-            }
-          });
-        }
-      });
-    });
-});
+  
 
 const httpsOptions = {
   key: fs.readFileSync('server.key'), // Ruta a tu clave privada
